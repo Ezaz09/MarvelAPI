@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - logicalFilePath: db.changelog/db.changelog-create-characters.yaml
+  - changeSet:
+      id: 1
+      author: master
+      changes:
+        - createTable:
+            tableName: characters
+            columns:
+              - column:
+                  name: id
+                  type: int (11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: thumbnail
+                  type: varchar (255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: resourceURI
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+

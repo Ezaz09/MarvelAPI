@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - logicalFilePath: db.changelog/db.changelog-master.yaml
+  - include:
+      file: db.changelog-create-characters.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-create-comics.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-create-characters-2-comics.yaml
+      relativeToChangelogFile: true

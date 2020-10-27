@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - logicalFilePath: db.changelog/db.changelog-create-characters.yaml
+  - changeSet:
+      id: 3
+      author: master
+      changes:
+        - createTable:
+            tableName: characters2comics
+            columns:
+              - column:
+                  name: id
+                  type: int (11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: character_id
+                  type: int (11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comic_id
+                  type: int (11)
+                  constraints:
+                    nullable: false

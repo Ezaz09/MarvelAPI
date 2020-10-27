@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - logicalFilePath: db.changelog/db.changelog-create-comics.yaml
+  - changeSet:
+      id: 2
+      author: master
+      changes:
+        - createTable:
+            tableName: comics
+            columns:
+              - column:
+                  name: id
+                  type: int (11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: thumbnail
+                  type: varchar (255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: issue_number
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: variant_description
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: isbn
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: upc
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diamond_code
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: format
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: page_count
+                  type: varchar (255)
+                  constraints:
+                    nullable: false
