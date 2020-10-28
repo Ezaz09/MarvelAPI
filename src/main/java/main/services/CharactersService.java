@@ -145,7 +145,7 @@ public class CharactersService extends DefaultService {
             HashMap<String, String> errors = new HashMap<>();
             errors.put("Ошибка при сохранении нового персонажа", e.getMessage());
             addNewCharacterResponse.setErrors(errors);
-            return new ResponseEntity<>(addNewCharacterResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(addNewCharacterResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if (characterRequest.getComics() != null) {
@@ -156,7 +156,7 @@ public class CharactersService extends DefaultService {
                 HashMap<String, String> errors = new HashMap<>();
                 errors.put("Ошибка при сохранении ссылок на комиксы для нового персонажа", "Имя персонажа - " + characterRequest.getName());
                 addNewCharacterResponse.setErrors(errors);
-                return new ResponseEntity<>(addNewCharacterResponse, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(addNewCharacterResponse, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -303,7 +303,7 @@ public class CharactersService extends DefaultService {
             HashMap<String, String> errors = new HashMap<>();
             errors.put("Персонаж", "Персонаж не был найден!");
             editCharacterResponse.setErrors(errors);
-            return new ResponseEntity<>(editCharacterResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(editCharacterResponse, HttpStatus.NOT_FOUND);
         }
 
         characterByName.setDescription(editCharacterRequest.getDescription());
