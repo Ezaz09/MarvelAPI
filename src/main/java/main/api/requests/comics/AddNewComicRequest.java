@@ -1,25 +1,5 @@
 package main.api.requests.comics;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+public class AddNewComicRequest extends ComicRequest {
 
-import java.util.List;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AddNewComicRequest {
-    private String title;
-    private MultipartFile thumbnail;
-    private String issueNumber;
-    private String variantDescription;
-    private String description;
-    private String isbn;
-    private String upc;
-    private String diamondCode;
-    private String format;
-    private String pageCount;
-    private List<String> characters;
 }

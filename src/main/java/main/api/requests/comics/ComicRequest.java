@@ -1,23 +1,23 @@
-package main.api.responses.comics;
+package main.api.requests.comics;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import main.api.responses.Thumbnail;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import javax.persistence.Column;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ComicDTO {
+public class ComicRequest {
+    @Column(nullable = false)
     private String title;
+    private MultipartFile thumbnail;
     private String issueNumber;
     private String variantDescription;
     private String description;
-    private Thumbnail thumbnail;
-    private Date modified;
     private String isbn;
     private String upc;
     private String diamondCode;

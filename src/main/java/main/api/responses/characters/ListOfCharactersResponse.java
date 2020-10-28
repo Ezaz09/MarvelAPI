@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -11,4 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ListOfCharactersResponse {
     private List<CharacterDTO> characters;
+    private HashMap<String, String> errors;
 }

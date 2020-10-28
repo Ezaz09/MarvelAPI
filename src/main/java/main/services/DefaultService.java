@@ -39,9 +39,25 @@ public class DefaultService {
     }
 
     public boolean deleteCharacterFromComics(Character character) {
-        List<Character2Comic> comicsForCharacter = character2ComicRepository.findComicsForCharacter(character);
+        List<Character2Comic> comicsForCharacter = character2ComicRepository.findComicsForCharacter(character.getId());
         for (Character2Comic c2c: comicsForCharacter) {
-            character2ComicRepository.delete(c2c);
+            try {
+                character2ComicRepository.delete(c2c);
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean deleteCharactersFromComic(Comic comic) {
+        List<Character2Comic> comicsForCharacter = character2ComicRepository.findCharactersForComic(comic.getId());
+        for (Character2Comic c2c: comicsForCharacter) {
+            try {
+                character2ComicRepository.delete(c2c);
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }
@@ -56,10 +72,15 @@ public class DefaultService {
             }
 
             Character2Comic character2Comic = new Character2Comic();
-            character2Comic.setCharacter(character);
-            character2Comic.setComic(comicByName);
+            character2Comic.setCharacterId(character.getId());
+            character2Comic.setComicId(comicByName.getId());
 
-            Character2Comic save = character2ComicRepository.save(character2Comic);
+            try {
+                character2ComicRepository.save(character2Comic);
+            } catch (Exception e) {
+                return false;
+            }
+
         }
         return true;
     }
@@ -74,10 +95,14 @@ public class DefaultService {
             }
 
             Character2Comic character2Comic = new Character2Comic();
-            character2Comic.setCharacter(characterByName);
-            character2Comic.setComic(comic);
+            character2Comic.setCharacterId(characterByName.getId());
+            character2Comic.setComicId(comic.getId());
 
-            Character2Comic save = character2ComicRepository.save(character2Comic);
+            try {
+                character2ComicRepository.save(character2Comic);
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }
@@ -89,16 +114,38 @@ public class DefaultService {
             return comicsList;
         }
 
-        List<Character2Comic> comicsForCharacter = character2ComicRepository.findComicsForCharacter(character);
+        List<Character2Comic> comicsForCharacter = character2ComicRepository.findComicsForCharacter(character.getId());
 
         if(comicsForCharacter == null) {
             return comicsList;
         }
 
         for (Character2Comic dependency:comicsForCharacter) {
-            comicsList.add(dependency.getComic().getTitle());
+            Comic byId = comicsRepository.getComicByID(dependency.getComicId());
+            comicsList.add(byId.getTitle());
         }
 
         return comicsList;
+    }
+
+    public List<String> findCharactersForComicAndReturn(Comic comic) {
+        List<String> charactersList = new ArrayList<>();
+
+        if(comic == null) {
+            return charactersList;
+        }
+
+        List<Character2Comic> charactersForComic = character2ComicRepository.findCharactersForComic(comic.getId());
+
+        if(charactersForComic == null) {
+            return charactersList;
+        }
+
+        for (Character2Comic dependency:charactersForComic) {
+            Character characterByID = charactersRepository.getCharacterByID(dependency.getCharacterId());
+            charactersList.add(characterByID.getName());
+        }
+
+        return charactersList;
     }
 }

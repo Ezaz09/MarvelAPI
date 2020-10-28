@@ -3,7 +3,7 @@ package main.mappers;
 import liquibase.util.file.FilenameUtils;
 import main.api.responses.characters.CharacterDTO;
 import main.api.responses.characters.CharacterResponse;
-import main.api.responses.characters.CharacterThumbnail;
+import main.api.responses.Thumbnail;
 import main.api.responses.characters.ListOfCharactersResponse;
 import main.models.Character;
 import org.json.simple.JSONArray;
@@ -16,18 +16,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CharactersMapper {
+public class CharactersMapper extends DefaultMapper {
 
-    public ListOfCharactersResponse characterJsonToCharactersList(String characterJson) throws ParseException, java.text.ParseException {
-
+    public ListOfCharactersResponse characterJsonToCharactersList(String characterJson) throws Exception {
+        ListOfCharactersResponse listOfCharactersResponse = new ListOfCharactersResponse();
         if (characterJson == null) {
-            return new ListOfCharactersResponse();
+            listOfCharactersResponse.setErrors(this.getEmptyJsonError());
+            return listOfCharactersResponse;
         }
 
         JSONArray resultList = parseCharacterJsonData(characterJson);
 
         if (resultList == null) {
-            return new ListOfCharactersResponse();
+            listOfCharactersResponse.setErrors(this.getParsingError());
+            return listOfCharactersResponse;
         }
 
         Iterator jsonDataItr = resultList.iterator();
@@ -40,26 +42,33 @@ public class CharactersMapper {
 
             charactersList.add(character);
         }
-        ListOfCharactersResponse listOfCharactersResponse = new ListOfCharactersResponse();
-        listOfCharactersResponse.setCharacters(charactersList);
+
+        if(charactersList.isEmpty()) {
+            listOfCharactersResponse.setErrors(this.getNotFoundError());
+        } else {
+            listOfCharactersResponse.setCharacters(charactersList);
+        }
+
         return listOfCharactersResponse;
     }
 
-    public CharacterResponse characterJsonToCharacterResponse(String characterJson) throws ParseException, java.text.ParseException {
+    public CharacterResponse characterJsonToCharacterResponse(String characterJson) throws Exception {
+        CharacterResponse characterResponse = new CharacterResponse();
 
         if (characterJson == null) {
-            return new CharacterResponse();
+            characterResponse.setErrors(this.getEmptyJsonError());
+            return characterResponse;
         }
 
         JSONArray resultList = parseCharacterJsonData(characterJson);
 
         if (resultList == null) {
-            return new CharacterResponse();
+            characterResponse.setErrors(this.getParsingError());
+            return characterResponse;
         }
 
         Iterator jsonDataItr = resultList.iterator();
 
-        CharacterResponse characterResponse = new CharacterResponse();
         if (jsonDataItr.hasNext()) {
             JSONObject recordFromJson = (JSONObject) jsonDataItr.next();
 
@@ -67,27 +76,36 @@ public class CharactersMapper {
 
             characterResponse.setCharacter(character);
         }
+
+        if(characterResponse.getCharacter() == null) {
+            characterResponse.setErrors(this.getNotFoundError());
+        }
+
         return characterResponse;
     }
 
-    private CharacterDTO createNewCharacterDTO(JSONObject recordFromJson) throws java.text.ParseException {
+    private CharacterDTO createNewCharacterDTO(JSONObject recordFromJson) throws Exception {
         CharacterDTO character = new CharacterDTO();
-        character.setName((String) recordFromJson.get("name"));
-        character.setDescription((String) recordFromJson.get("description"));
+        try {
+            character.setName((String) recordFromJson.get("name"));
+            character.setDescription((String) recordFromJson.get("description"));
 
-        String modified = (String) recordFromJson.get("modified");
-        character.setModified(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ").parse(modified));
+            String modified = (String) recordFromJson.get("modified");
+            character.setModified(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ").parse(modified));
 
-        CharacterThumbnail characterThumbnail = new CharacterThumbnail();
-        JSONObject thumbnail = (JSONObject) recordFromJson.get("thumbnail");
+            Thumbnail characterThumbnail = new Thumbnail();
+            JSONObject thumbnail = (JSONObject) recordFromJson.get("thumbnail");
 
-        characterThumbnail.setExtension((String) thumbnail.get("extension"));
-        characterThumbnail.setPath((String) thumbnail.get("path"));
+            characterThumbnail.setExtension((String) thumbnail.get("extension"));
+            characterThumbnail.setPath((String) thumbnail.get("path"));
 
-        character.setThumbnail(characterThumbnail);
-        character.setResourceURI((String) recordFromJson.get("resourceURI"));
+            character.setThumbnail(characterThumbnail);
+            character.setResourceURI((String) recordFromJson.get("resourceURI"));
 
-        character.setComics(parseComicsForCharacter(recordFromJson));
+            character.setComics(parseComicsForCharacter(recordFromJson));
+        } catch (java.text.ParseException e) {
+            throw new Exception("Произошла ошибка при парсинге элемента ответа - " + e.getMessage());
+        }
 
         return character;
     }
@@ -115,10 +133,16 @@ public class CharactersMapper {
         return parseComicsList;
     }
 
-    private JSONArray parseCharacterJsonData(String characterJson) throws ParseException {
+    private JSONArray parseCharacterJsonData(String characterJson) throws Exception {
         JSONArray resultList = null;
+        Object parsedData;
 
-        Object parsedData = new JSONParser().parse(characterJson);
+        try {
+           parsedData = new JSONParser().parse(characterJson);
+        } catch (ParseException e) {
+            throw new Exception("Произошла ошибка при парсинге ответа - " + e.getMessage());
+        }
+
         JSONObject resultJsonData;
         if (!parsedData.getClass().getSimpleName().equals("JSONObject")) {
             //Ошибка парсинга
@@ -148,11 +172,12 @@ public class CharactersMapper {
         characterDTO.setDescription(character.getDescription());
         characterDTO.setModified(character.getModified());
 
-        CharacterThumbnail characterThumbnail = new CharacterThumbnail();
-        characterThumbnail.setPath(character.getThumbnail());
+        Thumbnail thumbnail = new Thumbnail();
+        thumbnail.setPath(character.getThumbnail());
         String extension = FilenameUtils.getExtension(character.getThumbnail());
-        characterThumbnail.setExtension(extension);
+        thumbnail.setExtension(extension);
 
+        characterDTO.setThumbnail(thumbnail);
         characterDTO.setResourceURI(character.getResourceURI());
 
         return characterDTO;

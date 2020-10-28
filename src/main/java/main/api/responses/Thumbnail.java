@@ -1,4 +1,4 @@
-package main.api.responses.characters;
+package main.api.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CharacterThumbnail {
+public class Thumbnail {
     private String path;
     private String extension;
 }
