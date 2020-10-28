@@ -175,4 +175,19 @@ public class ImageService {
         return sb.toString();
 
     }
+
+    public boolean deleteUserPhotoFromServer(String pathToPhoto) {
+        if (pathToPhoto == null) {
+            return false;
+        }
+
+
+        File file = new File(System.getProperty("user.dir") + File.separator + pathToPhoto);
+        if (file.exists()) {
+            return file.delete();
+        } else {
+            return false;
+        }
+
+    }
 }

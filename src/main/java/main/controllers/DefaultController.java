@@ -3,6 +3,9 @@ package main.controllers;
 import main.services.AuthenticationService;
 import main.services.CharactersService;
 import main.services.ComicsService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,5 +75,35 @@ public class DefaultController {
 
     public List<String> getListOfComicsFormats() {
         return listOfComicsFormats;
+    }
+
+    public Pageable getPageableForCharacters(int offset, int limit, String orderBy) {
+        Pageable sortedBy = null;
+        if (orderBy.equals("name")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("name").ascending());
+        } else if (orderBy.equals("-name")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("name").descending());
+        } else if (orderBy.equals("modified")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("modified").ascending());
+        } else if (orderBy.equals("-modified")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("modified").descending());
+        }
+
+        return sortedBy;
+    }
+
+    public Pageable getPageableForComics(int offset, int limit, String orderBy) {
+        Pageable sortedBy = null;
+        if (orderBy.equals("title")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("title").ascending());
+        } else if (orderBy.equals("modified")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("modified").ascending());
+        } else if (orderBy.equals("-title")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("title").descending());
+        } else if (orderBy.equals("-modified")) {
+            sortedBy = PageRequest.of(offset, limit, Sort.by("modified").descending());
+        }
+
+        return sortedBy;
     }
 }

@@ -1,6 +1,7 @@
 package main.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
@@ -12,6 +13,11 @@ import java.util.HashMap;
 @Slf4j
 @Service
 public class AuthenticationService {
+    @Value("${PublicApiKey}")
+    private String publicApiKey;
+
+    @Value("${PrivateApiKey}")
+    private String privateApiKey;
 
     public String getUriForListOfCharacters(int offset,
                                             int limit,
@@ -166,13 +172,19 @@ public class AuthenticationService {
     }
 
     public HashMap<String, Object> getAuthenticationHash() throws NoSuchAlgorithmException {
-        String publicApiKey = "54d966bd6ed91fe91275873ad575e0dd";
-        String privateApiKey = "6daaa969a0956bd095277dd459c0c2c766e0f328";
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
-        ;
-        String hash = ts.getTime() + privateApiKey + publicApiKey;
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+
+        String hash = ts.getTime() + this.privateApiKey + this.publicApiKey;
+
+        MessageDigest md;
+
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new NoSuchAlgorithmException("Ошибка инициализации алгоритма шифрования - " + e.getMessage());
+        }
+
         md.update(hash.getBytes());
         byte[] digest = md.digest();
         String myHash = DatatypeConverter
@@ -180,7 +192,7 @@ public class AuthenticationService {
 
         HashMap<String, Object> mapWithParams = new HashMap<>();
         mapWithParams.put("time", ts.getTime());
-        mapWithParams.put("apikey", publicApiKey);
+        mapWithParams.put("apikey", this.publicApiKey);
         mapWithParams.put("hash", myHash);
 
         return mapWithParams;

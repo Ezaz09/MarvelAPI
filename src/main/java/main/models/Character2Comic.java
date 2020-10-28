@@ -19,11 +19,9 @@ public class Character2Comic {
     @Column(nullable = false)
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "character_id", referencedColumnName = "id")
-    private Character character;
+    @Column(name = "character_id", nullable = false)
+    private int characterId;
 
-    @OneToOne
-    @JoinColumn(name = "comic_id", referencedColumnName = "id")
-    private Comic comic;
+    @Column(name = "comic_id", nullable = false)
+    private int comicId;
 }
