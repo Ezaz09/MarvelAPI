@@ -19,6 +19,7 @@ And can store your own characters and comics
 - MySQL
 
 # How to run 
+- Create a new schema in your DB with a name "marvel_api".
 - Initialize next environment variables:
   - ${MySQL_DB}
   - ${MySQL_UN}
@@ -26,4 +27,3 @@ And can store your own characters and comics
   - ${PublicApiKey}
   - ${PrivateApiKey}
   
-- Create a new schema in your DB with a name "marvel_api".
