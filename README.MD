@@ -27,3 +27,6 @@ And can store your own characters and comics
   - ${PublicApiKey}
   - ${PrivateApiKey}
   
+# Link to swagger 
+ https://app.swaggerhub.com/apis/Ezaz09/Marvel_API/1.0.0
+

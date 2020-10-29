@@ -10,7 +10,6 @@ import main.models.Comic;
 import main.repositories.Character2ComicRepository;
 import main.repositories.CharactersRepository;
 import main.repositories.ComicsRepository;
-import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -446,7 +445,7 @@ public class ComicsService extends DefaultService {
             HashMap<String, String> errors = new HashMap<>();
             errors.put("Комикс", "Комикс не был найден!");
             editComicResponse.setErrors(errors);
-            return new ResponseEntity<>(editComicResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(editComicResponse, HttpStatus.NOT_FOUND);
         }
 
         comicByTitle.setIssueNumber(editComicRequest.getIssueNumber());
